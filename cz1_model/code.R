@@ -21,16 +21,44 @@ resample(learnerRF, predict_affordable, cv_scheme, measures = list(auc))
 bench_affordable <- benchmark(learners = list(learnerRF, learnerNN),
                               tasks = predict_affordable,
                               resamplings = cv_scheme, 
-                              measures = list(auc))
+                              measures = list(auc, acc))
 
+plotBMRBoxplots(bench_affordable, auc)
 
 model_rf <- train(learnerRF, predict_affordable, subset = 1L:5000)
 preds <- predict(model_rf, predict_affordable, subset = 5001L:5853)
 
 calculateROCMeasures(preds)
 
+# tuning ------------------------------------------------------------
 
+set.seed(15390)
 getParamSet("classif.nnet")
 getParamSet("classif.randomForest")
 
-makeLearner("classif.nnet", predict.type = "prob", size = 5)
+makeLearner("classif.nnet", predict.type = "prob", size = 5, decay = 0.2)
+
+
+parameters_set <- makeParamSet(
+  makeIntegerParam("size", lower = 1, upper = 15),
+  makeNumericParam("decay", -5, 5, trafo = function(x) 2^x)
+)
+
+library(mlrMBO)
+
+
+mbo_ctrl <- makeTuneControlMBO(mbo.control = setMBOControlTermination(makeMBOControl(), iters = 2))
+optimal_nnet <- tuneParams(makeLearner("classif.nnet", predict.type = "prob"), predict_affordable, cv_scheme, 
+                           par.set = parameters_set, measures = list(auc), control = mbo_ctrl, 
+                           show.info = FALSE)
+
+optimal_nnet <- mbo(nnet_function, control = mbo_ctrl, show.info = FALSE)
+
+getOptPathY(optimal_nnet[["opt.path"]])
+
+benchmark(learners = list(makeLearner("classif.nnet", id = "nonoptimal", predict.type = "prob"), 
+                          makeLearner("classif.nnet", id = "optimal", predict.type = "prob", par.vals = optimal_nnet[["x"]]),
+                          makeLearner("classif.randomForest", predict.type = "prob")),
+          tasks = predict_affordable,
+          resamplings = cv_scheme, 
+          measures = list(auc))
