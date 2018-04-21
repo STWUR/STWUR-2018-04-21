@@ -1,0 +1,85 @@
+---
+title: "Full stack data science w R"
+author: "Michal Burdukiewicz"
+date: "21 kwietnia 2018"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## STWUR
+
+STWUR (Stowarzyszenie Wrocławskich Użytkowników R)
+
+<img src='https://stwur.github.io/STWUR//images/stwur_logo_Mar2017.svg' height="75%" width="75%"/>
+
+## Why R? Foundation
+
+<img src='https://raw.githubusercontent.com/WhyRFoundation/WhyRFoundation.github.io/master/found.png' height="75%" width="75%"/>
+
+## Why R? 2018
+
+<img src='https://whyr2018.github.io/WhyR2018/img/bg/europe2_mapa_kwiecien_light.jpg' height="95%" width="95%"/>
+
+## Full stack data science
+
+1. Zebranie danych.
+2. Czyszczenie i eksploracja danych.
+3. **Stworzenie modelu.**
+4. **Udostępnienie modelu.**
+ 
+## Zebranie danych
+
+Web-scrapping:
+
+ - rvest
+ - rselenium
+ 
+Wczytywanie danych:
+
+ - pdftools
+ - readr
+
+## Czyszczenie i eksploracja danych
+
+ - dplyr
+ - ggplot2
+
+## Stworzenie modelu
+
+ - mlr
+ - caret
+ - keras
+
+## Udostępnienie modelu
+
+Reproduktywne raporty:
+
+ - knitr
+ - rmarkdown
+ 
+Aplikacje webowe:
+
+ - shiny
+ - fiery
+ 
+Interaktywne grafiki:
+ 
+ - plotly
+ 
+## Plan spotkania
+
+1. Wprowadzenie do mlr.
+2. Strojenie modelu w mlr.
+3. Pizza.
+4. Wprowadzenie do shiny
+5. Udostępnianie modelu jako aplikacji w shiny
+
+## Niezbędne pakiety
+
+```r
+source("https://tinyurl.com/erementarz6")
+```
+

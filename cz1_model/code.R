@@ -1,6 +1,8 @@
 library(mlr)
 library(dplyr)
 
+set.seed(15390)
+
 dat <- read.csv(file = "mieszkania_mlr.csv", encoding = "UTF-8")
 
 predict_affordable <- makeClassifTask(id = "affordableApartments", 
@@ -16,7 +18,9 @@ cv_scheme <- makeResampleDesc("CV", iters = 5, stratify = TRUE)
 
 resample(learnerNN, predict_affordable, cv_scheme, measures = list(auc))
 
-resample(learnerRF, predict_affordable, cv_scheme, measures = list(auc))
+# 1. Przeprowadź walidację krzyżową learnerRF (3-krotna walidacja krzyżowa)
+# 2. Sprawadź inne metody walidacji modelu, np. makeResampleDesc("Holdout", split = 1/2, stratify = TRUE)
+# 3. Przewidź cenę mieszkania (regr.randomForest)
 
 bench_affordable <- benchmark(learners = list(learnerRF, learnerNN),
                               tasks = predict_affordable,
@@ -32,9 +36,8 @@ preds <- predict(model_rf, predict_affordable, subset = 5001L:5853)
 
 calculateROCMeasures(preds)
 
-# tuning ------------------------------------------------------------
+# cz. 2 - strojenie ------------------------------------------------------------
 
-set.seed(15390)
 getParamSet("classif.nnet")
 getParamSet("classif.randomForest")
 
@@ -47,7 +50,6 @@ parameters_set <- makeParamSet(
 )
 
 library(mlrMBO)
-
 
 mbo_ctrl <- makeTuneControlMBO(mbo.control = setMBOControlTermination(makeMBOControl(), iters = 2))
 optimal_nnet <- tuneParams(makeLearner("classif.nnet", predict.type = "prob"), predict_affordable, cv_scheme, 
