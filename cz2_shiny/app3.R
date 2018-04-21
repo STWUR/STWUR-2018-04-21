@@ -1,20 +1,26 @@
 library(shiny)
 
 server <- function(input, output) {
-  twice_as_much <- reactive({
-    input[["obs"]]*2
+  random_points <- reactive({
+    rnorm(input[["obs"]])
+  })
+  
+  points_mean <- reactive({
+    mean(random_points())
   })
   
   output[["plot"]] <- renderPlot({
-    plot(1L:twice_as_much(), ylab = "Liczba punktów")
+    #plot(1L:input[["obs"]], random_points(), ylab = "Liczba punktów")
+    plot(1L:input[["obs"]], random_points(), ylab = "Liczba punktów")
+    abline(h = points_mean(), col = "red")
   })
   
   output[["print"]] <- renderPrint({
-    twice_as_much()
+    points_mean()
   })
   
   output[["text"]] <- renderText({
-    twice_as_much()
+    points_mean()
   })
 }
 
@@ -22,10 +28,7 @@ ui <- fluidPage(
   titlePanel("Reaktywność"),
   sidebarLayout(
     sidebarPanel(
-      sliderInput("obs", "Liczba punktów:", min = 1, max = 10, value = 5)
-      #numericInput("obs", "Liczba punktów:", min = 1, max = 10, step = 1, value = 5)
-      #selectInput("obs", "Liczba punktów:", choices = c("One point" = 1, "Five points" = 5, "Ten points" = 10))
-    ),
+      sliderInput("obs", "Liczba punktów:", min = 1, max = 10, value = 5)),
     mainPanel(plotOutput("plot"),
               verbatimTextOutput("print"),
               textOutput("text"))
