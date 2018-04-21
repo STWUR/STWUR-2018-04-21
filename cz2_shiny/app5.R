@@ -23,6 +23,7 @@ server <- function(input, output) {
 }
 
 ui <- fluidPage(
+  titlePanel("Predykcja dla pojedynczego mieszkania"),
   sidebarLayout(
     sidebarPanel(
       sliderInput("metraz", "Metraż:", min = 30, max = 100, value = 61),

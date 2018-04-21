@@ -3,18 +3,19 @@ library(DT)
 
 server <- function(input, output) {
   output[["table"]] <- renderDataTable({
-    #datatable(iris)
-    #datatable(iris, filter = "top")
-    datatable(iris, extensions = "Buttons", options = list(
-      dom = 'Brtip',
-      buttons = 
-        list('copy', 'print', list(
-          buttons = c('csv', 'excel', 'pdf')
-        ))))
+    datatable(iris)
+    # datatable(iris, filter = "top")
+    
+    # datatable(iris, extensions = "Buttons", 
+    #           options = list(
+    #             dom = "Brtip",
+    #             buttons = list("copy", "csv", "excel")))
+    
   })
 }
 
 ui <- fluidPage(
+  titlePanel("Datatable"),
   dataTableOutput("table")
 )
 
