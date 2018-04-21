@@ -26,6 +26,8 @@ bench_affordable <- benchmark(learners = list(learnerRF, learnerNN),
 plotBMRBoxplots(bench_affordable, auc)
 
 model_rf <- train(learnerRF, predict_affordable, subset = 1L:5000)
+#save(model_rf, file = "./cz2_shiny/model_rf.RData")
+
 preds <- predict(model_rf, predict_affordable, subset = 5001L:5853)
 
 calculateROCMeasures(preds)
